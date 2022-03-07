@@ -3,11 +3,9 @@ const express = require("express");
 const app = express();
 const port = 4000;
 
-const server = app.listen(`${port}`, function () {
-  console.log(`Server started on port ${port}`);
+app.get("/", (req, res) => {
+  res.send("Hello and welcome to socket api");
 });
-
-const io = require("socket.io")(server);
 
 function getStockValue() {
   return Math.floor(Math.random() * 5000);
@@ -71,6 +69,13 @@ function getRandomValue() {
   ];
   return tickerData;
 }
+
+const server = app.listen(`${port}`, function () {
+  console.log(`Server started on port ${port}`);
+});
+
+const io = require("socket.io")(server);
+
 io.on("connection", (socket) => {
   setInterval(() => {
     socket.broadcast.emit("newdata", getRandomValue());
